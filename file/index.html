@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <script>
+      fetch("students.xml")
+        .then(res => res.text())
+        .then(str => {
+          let parser = new DOMParser();
+          let xml = parser.parseFromString(str, "application/xml");
+          let xsltProcessor = new XSLTProcessor();
+          fetch("students.xsl")
+            .then(r => r.text())
+            .then(s => {
+              let xsl = parser.parseFromString(s, "application/xml");
+              xsltProcessor.importStylesheet(xsl);
+              let result = xsltProcessor.transformToFragment(xml, document);
+              document.body.appendChild(result);
+            });
+        });
+    </script>
+  </body>
+</html>
